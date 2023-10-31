@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TimerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,6 +38,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('auth')->group(function () { //todo: fix
+    Route::redirect('/', '/home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/projects', [ProjectController::class, 'index']);
+    Route::post('/projects', [ProjectController::class, 'store']);
+    Route::post('/projects/{id}/timers/stop', [TimerController::class, 'stopRunning']);
+    Route::post('/projects/{id}/timers', [TimerController::class, 'store']);
+    Route::get('/project/timers/active', [TimerController::class, 'running']);
+});
 
 
 require __DIR__.'/auth.php';
