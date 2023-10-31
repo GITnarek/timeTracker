@@ -2,10 +2,20 @@
 
 namespace App\Enums\Tasks;
 
-enum StatusesEnum: int
+use App\Enums\StringableEnum;
+
+enum StatusesEnum: string implements StringableEnum
 {
-    case TODO = 0;
-    case IN_PROGRESS = 1;
-    case READY_FOR_TEST = 2;
-    case RESOLVED = 3;
+    case TODO = 'TO DO';
+    case IN_PROGRESS = 'IN PROGRESS';
+    case READY_FOR_TEST = 'READY FOR TEST';
+    case RESOLVED = 'RESOLVED';
+
+    /**
+     * @return string
+     */
+    public function toString(): string
+    {
+        return $this->value;
+    }
 }

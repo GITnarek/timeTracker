@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Timer extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
         'name',
         'user_id',

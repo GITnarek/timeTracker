@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Timer\StoreRequest;
 use App\Models\Project;
 use App\Models\Timer;
 use Illuminate\Http\Request;
@@ -9,16 +10,15 @@ use Illuminate\Support\Carbon;
 
 class TimerController extends Controller
 {
-    public function store(Request $request, int $id) //todo: fix
+    public function store(StoreRequest $request, int $id) //todo: fix
     {
-        $data = $request->validate(['name' => 'required|between:3,100']);
-
         $timer = Project::mine()->findOrFail($id)
             ->timers()
             ->save(new Timer([
-                'name' => $data['name'],
-                'user_id' => auth()->id(), //todo: task_id
+                'name' => $request->get('name'),
                 'start_time' => new Carbon,
+                'end_time' => new Carbon,
+//                'task_id' =>
             ]));
 
         return $timer->with('project')->find($timer->id);

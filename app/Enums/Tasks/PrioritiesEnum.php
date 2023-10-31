@@ -2,10 +2,17 @@
 
 namespace App\Enums\Tasks;
 
-enum PrioritiesEnum: int
+use App\Enums\StringableEnum;
+
+enum PrioritiesEnum: string implements StringableEnum
 {
-   case MINOR = 0;
-   case MAJOR = 1;
-   case CRITICAL = 2;
-   case BLOCKER = 3;
+   case MINOR = 'MINOR';
+   case MAJOR = 'MAJOR';
+   case CRITICAL = 'CRITICAL';
+   case BLOCKER = 'BLOCKER';
+
+   public function toString(): string
+   {
+       return $this->value;
+   }
 }

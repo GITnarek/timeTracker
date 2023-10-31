@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\EnumHelper;
 use App\Enums\Tasks\PrioritiesEnum;
 use App\Enums\Tasks\StatusesEnum;
 use App\Enums\Tasks\TypesEnum;
@@ -21,9 +22,12 @@ return new class extends Migration
             $table->string('sysname')->unique();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->unsignedTinyInteger('status')->default(StatusesEnum::TODO);
-            $table->unsignedTinyInteger('priority')->default(PrioritiesEnum::MINOR);
-            $table->unsignedTinyInteger('type')->default(TypesEnum::TASK);
+            $table->enum('status', EnumHelper::values(StatusesEnum::cases()))
+                ->default(StatusesEnum::TODO);
+            $table->enum('priority', EnumHelper::values(PrioritiesEnum::cases()))
+                ->default(PrioritiesEnum::MINOR);
+            $table->enum('type', EnumHelper::values(TypesEnum::cases()))
+                ->default(TypesEnum::TASK);
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
             $table->integer('estimated_time')->default(0);

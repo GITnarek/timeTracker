@@ -1,0 +1,12 @@
+.name{
+    font-size: 20px;
+    font-family: Ani;
+}
+.div{
+    width: 100px;
+    height: 100px;
+    border: 1px solid grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
