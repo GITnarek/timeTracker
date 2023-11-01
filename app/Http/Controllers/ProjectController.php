@@ -2,29 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\EnumHelper;
-use App\Enums\Tasks\StatusesEnum;
 use App\Http\Requests\Project\StoreRequest;
 use App\Http\Requests\Project\UpdateRequest;
 use App\Models\Project;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 
 class ProjectController extends Controller
 {
-    public function index()
+    /**
+     * @return array
+     */
+    public function index(): array
     {
         $projects = Project::all();
 
-        dd($projects->toArray());
-//        return view('projects.index', compact('projects'));
+        return $projects->toArray();
     }
 
-    public function create()
+    /**
+     * @return View|Application|Factory|\Illuminate\Contracts\Foundation\Application
+     */
+    public function create(): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
     {
         return view('projects.create');
     }
 
-    public function store(StoreRequest $request) //todo: check and fix
+    /**
+     * @param StoreRequest $request
+     * @return bool|array
+     */
+    public function store(StoreRequest $request): bool|array //todo: check and fix
     {
         $requestData = [
             'name' => $request->get('name'),
@@ -33,56 +43,59 @@ class ProjectController extends Controller
 
         $data = array_merge($requestData, ['user_id' => auth()->id()]);
 
-        $project = Project::create($data);
+        $project = Project::query()->create($data);
 
         return $project ? array_merge($project->toArray(), ['timers' => []]) : false;
     }
 
-    public function show($project_id)
+    /**
+     * @param $id
+     * @return array
+     */
+    public function show($id): array
     {
-        $project = Project::query()->where('id', $project_id)->get();
+        $project = Project::query()->where('id', $id)->get();
 
-        dd($project->toArray());
-
-        return view('projects.show', compact('project'));
+        return $project->toArray();
     }
 
-    public function edit($project_id)
+    /**
+     * @param $id
+     * @return View|Application|Factory|\Illuminate\Contracts\Foundation\Application
+     */
+    public function edit($id): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
     {
-        $project = Project::query()->where('id', $project_id)->get();
+        $project = Project::query()->where('id', $id)->get();
 
         return view('projects.edit', compact('project'));
     }
 
-    public function update(UpdateRequest $request, $project_id)
+    /**
+     * @param UpdateRequest $request
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function update(UpdateRequest $request, $id): RedirectResponse
     {
-        $project = Project::query()->where('id', $project_id)->get();
 
-        $requestData = [
+        Project::query()->where('id', $id)->update([
             'name' => $request->get('name'),
             'description' => $request->get('description'),
-        ];
-
-        $project->update($requestData);
+        ]);
 
         return redirect()->route('projects.index');
     }
 
-    public function destroy($project_id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function destroy($id): RedirectResponse
     {
-        $project = Project::query()->where('id', $project_id)->get();
+        $project = Project::query()->where('id', $id);
 
         $project->delete();
 
         return redirect()->route('projects.index');
-    }
-
-    public function getStatuses()
-    {
-        $statuses = EnumHelper::values(StatusesEnum::cases());
-
-        echo '<pre>';
-        var_dump($statuses);
-//        return view('project.statuses', compact('statuses'));
     }
 }

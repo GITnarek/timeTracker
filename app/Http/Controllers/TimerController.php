@@ -15,7 +15,7 @@ class TimerController extends Controller
         $timer = Project::mine()->findOrFail($id)
             ->timers()
             ->save(new Timer([
-                'name' => $request->get('name'),
+                'name' => 'Timer', //todo from request
                 'start_time' => new Carbon,
                 'end_time' => new Carbon,
 //                'task_id' =>
