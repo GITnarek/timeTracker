@@ -13,7 +13,6 @@ const fetchDataFromApi = () => {
     axios.get('/projects')
         .then((response) => {
             dataFromApi.value = response.data;
-            console.log(dataFromApi.value);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -21,6 +20,18 @@ const fetchDataFromApi = () => {
 };
 
 onMounted(fetchDataFromApi);
+
+defineProps({
+    dataFromApi: {
+        type: Array
+    }
+})
+
+const columns = [
+    { data: 'id' },
+    { data: 'name' },
+    { data: 'description' }
+];
 </script>
 
 <template>
@@ -29,29 +40,18 @@ onMounted(fetchDataFromApi);
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 flex ">
-                        <div :class="styles.div1">
-                            New project:
-                        </div>
-                        <TextInput model-value="">
-                        </TextInput>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">
-                        <!-- Use v-for to loop through dataFromApi and render each project -->
-                        <div :class="styles.grid_container">
-                            <div :class="styles.grid_item" v-for="project in dataFromApi" :key="project.id">
-                                <h2>{{ project.name }}</h2>
-                                <p>{{ project.description }}</p>
-                                <!-- Add additional content or styling for each square -->
-                            </div>
-                        </div>
+                    <div class="p-6 text-gray-900 ">
+                        <DataTable :data="dataFromApi" :columns="columns"
+                        >
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Tools</th>
+                            </tr>
+                            </thead>
+                        </DataTable>
                     </div>
                 </div>
             </div>
